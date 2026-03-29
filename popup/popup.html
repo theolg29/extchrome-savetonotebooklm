@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NotebookLM Clipper</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path d="M4 4C4 2.9 4.9 2 6 2H14L20 8V20C20 21.1 19.1 22 18 22H6C4.9 22 4 21.1 4 20V4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M14 2V8H20" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M8 13H16M8 17H13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <span>NotebookLM Clipper</span>
+    </div>
+    <button id="user-badge" class="user-account hidden">
+      <span id="user-email"></span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" style="flex-shrink:0">
+        <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Chargement -->
+  <div id="state-loading" class="state">
+    <div class="spinner"></div>
+    <p id="loading-text" class="muted-text">Chargement…</p>
+  </div>
+
+  <!-- Non connecté -->
+  <div id="state-unauth" class="state hidden">
+    <p class="state-title">Connectez-vous à NotebookLM</p>
+    <p class="muted-text">Ouvrez NotebookLM dans votre navigateur puis revenez ici.</p>
+    <a href="https://notebooklm.google.com" target="_blank" class="btn-primary">
+      Ouvrir NotebookLM
+    </a>
+  </div>
+
+  <!-- Sélection de compte -->
+  <div id="state-account" class="state hidden">
+    <p class="section-label">Choisissez un compte</p>
+    <div id="account-list" class="account-list"></div>
+  </div>
+
+  <!-- Erreur -->
+  <div id="state-error" class="state hidden">
+    <p class="state-title">Une erreur est survenue</p>
+    <p id="error-message" class="muted-text"></p>
+    <button id="btn-retry" class="btn-secondary">Réessayer</button>
+  </div>
+
+  <!-- Principal -->
+  <div id="state-main" class="state hidden">
+    <div class="search-wrap">
+      <svg class="search-icon" width="12" height="12" viewBox="0 0 24 24" fill="none">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <input id="search-input" type="text" placeholder="Rechercher…" autocomplete="off">
+    </div>
+
+    <div id="notebook-list" class="nb-list"></div>
+
+    <div id="source-status" class="source-status hidden"></div>
+
+    <div class="footer">
+      <div class="mode-toggle">
+        <button class="mode-btn active" data-mode="text">URL</button>
+        <button class="mode-btn" data-mode="pdf">PDF</button>
+      </div>
+      <button id="btn-add" disabled>
+        <span id="btn-label">Ajouter</span>
+        <svg id="btn-spinner" class="spin hidden" width="12" height="12" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.5" stroke-dasharray="50" stroke-dashoffset="25" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden">
+    <span id="toast-message"></span>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>
