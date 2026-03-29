@@ -29,6 +29,7 @@ let favorites = [];
 let isTwitter = false;
 let currentTabUrl = "";
 let currentTabId = null;
+let selectedText = "";
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
@@ -43,8 +44,23 @@ async function init() {
     currentTabUrl = tab.url || "";
     currentTabId = tab.id;
     isTwitter = /^https?:\/\/(www\.)?(twitter\.com|x\.com)/.test(currentTabUrl);
+    // Récupérer le texte sélectionné dans l'onglet actif
+    try {
+      let sel;
+      try {
+        sel = await chrome.tabs.sendMessage(currentTabId, { type: "GET_SELECTION" });
+      } catch {
+        // Content script absent (onglet ouvert avant le reload) — l'injecter à la volée
+        await chrome.scripting.executeScript({ target: { tabId: currentTabId }, files: ["content.js"] });
+        sel = await chrome.tabs.sendMessage(currentTabId, { type: "GET_SELECTION" });
+      }
+      selectedText = sel?.text || "";
+    } catch {
+      selectedText = "";
+    }
   }
-  dbg("onglet récupéré:", currentTabUrl);
+
+  dbg("onglet récupéré:", currentTabUrl, "sélection:", selectedText.length, "chars");
 
   // ── Gestion du compte ─────────────────────────────────────────────────────
 
@@ -146,7 +162,11 @@ async function loadWithAuth() {
 
   allNotebooks = notebooks;
 
-  if (isTwitter) {
+  if (selectedText) {
+    const pill = document.getElementById("pill-selection");
+    if (pill) pill.classList.remove("hidden");
+    setMode("selection");
+  } else if (isTwitter) {
     setMode("pdf");
   } else {
     setMode("text");
@@ -342,6 +362,7 @@ async function handleAddSource() {
       mode,
       tabId: currentTabId,
       url: currentTabUrl,
+      selectedText: mode === "selection" ? selectedText : undefined,
     });
 
     await Storage.set("lastNotebook", selectedNotebookId);

@@ -7,7 +7,9 @@
     "activeTab",
     "storage",
     "debugger",
-    "tabs"
+    "tabs",
+    "contextMenus",
+    "scripting"
   ],
   "host_permissions": [
     "https://notebooklm.google.com/*",
@@ -36,5 +38,14 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "commands": {
+    "quick-add": {
+      "suggested_key": {
+        "mac": "Command+Shift+S",
+        "default": "Ctrl+Shift+S"
+      },
+      "description": "Ajouter la page courante au dernier notebook"
+    }
   }
 }
